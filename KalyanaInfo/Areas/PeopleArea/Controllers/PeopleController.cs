@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KalyanaInfo.Models;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace KalyanaInfo.Areas.PeopleArea.Controllers
 {
@@ -13,10 +14,11 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
     public class PeopleController : Controller
     {
         private readonly kalyanadiaryContext _context;
-
-        public PeopleController(kalyanadiaryContext context)
+        private readonly IActionContextAccessor accessor;
+        public PeopleController(kalyanadiaryContext context,IActionContextAccessor ac)
         {
             _context = context;
+            accessor = ac;
         }
 
         // GET: PeopleArea/People
@@ -67,20 +69,30 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Email,Password,City,SonOrDaughterOf,Image,Address,Hobby,Mobile,IdCardOrBForm,DateOfBirth,HasMobile,Gender,Education,Profession,Vehicle,Family,About,Married")] Person person)
+        public async Task<IActionResult> Create([Bind("Id,Name,Email,Password,SonOrDaughterOf,Image,Address,Hobby,Mobile,IdCardOrBForm,DateOfBirth,HasMobile,Gender,Education,Profession,Vehicle,Family,About,Married")] Person person)
         {
             if (ModelState.IsValid)
             {
+                UserLog log = new UserLog();
+                log.UserIp = accessor.ActionContext.HttpContext.Connection.RemoteIpAddress.ToString();
+                person.City = "Kalyana";
                 person.CreatedDate = DateTime.Now;
                 person.ModifiedDate = DateTime.Now;
                 _context.Add(person);
                 await _context.SaveChangesAsync();
+                Person p=await _context.Person.FindAsync(person);
+                log.UserId = p.Id;
+                log.Location = "Kalyana";
+                await _context.UserLog.AddAsync(log);
+
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Education"] = new SelectList(_context.Education, "Id", "Type", person.Education);
+            
+            ViewData["Education"] = new SelectList(_context.Education, "Id", "Upto", person.Education);
             ViewData["Family"] = new SelectList(_context.Family, "Id", "Name", person.Family);
             ViewData["Gender"] = new SelectList(_context.Gender, "Id", "GenderName", person.Gender);
-            ViewData["HasMobile"] = new SelectList(_context.Mobile, "Id", "HasMobile", person.HasMobile);
+            ViewData["HasMobile"] = new SelectList(_context.Mobile, "Id", "Type", person.HasMobile);
             ViewData["Profession"] = new SelectList(_context.Profession, "Id", "Name", person.Profession);
             ViewData["Vehicle"] = new SelectList(_context.Vehicle, "Id", "Name", person.Vehicle);
             return View(person);

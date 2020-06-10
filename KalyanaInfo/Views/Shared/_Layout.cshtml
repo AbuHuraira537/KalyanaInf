@@ -7,10 +7,18 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-   
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
+    @{ 
+        string path1= Context.Request.Host.ToString();
+        string p2 = Context.Request.Path.ToString();
+
+        }
+    @if (!(Context.Request.Host.ToString() + @Context.Request.Path.ToString()).Contains("create"))
+    {
+    
+
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
@@ -33,6 +41,7 @@
             </div>
         </nav>
     </header>
+    }
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
