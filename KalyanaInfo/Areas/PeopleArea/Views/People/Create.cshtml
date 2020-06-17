@@ -11,93 +11,94 @@
 <hr />
 <div class="row align-content-center">
     <div class="col-md-4">
-        <form asp-action="Create" id="PersonForm">
+        <form asp-action="Create" id="PersonForm" name="PersonForm" enctype="multipart/form-data">
+
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                <p><input id="image" name="image" type="file" accept="image/*" onchange="loadFile(event)" style="display: none;" required ></p>
+                <p><label for="image" style="cursor: pointer;">Upload Image</label></p>
+                <p><img id="output" width="60" height="60" style="border:1px solid black;border-radius:50%" /></p>
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" required />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
+                <input asp-for="Email" type="email" class="form-control" required />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
+                <input asp-for="Password" class="form-control" required />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-           
             <div class="form-group">
                 <label asp-for="SonOrDaughterOf" class="control-label"></label>
-                <input asp-for="SonOrDaughterOf" class="form-control" />
+                <input asp-for="SonOrDaughterOf" class="form-control" required />
                 <span asp-validation-for="SonOrDaughterOf" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Image" class="control-label"></label>
-                <input asp-for="Image" class="form-control" />
-                <span asp-validation-for="Image" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" />
+                <input asp-for="Address" class="form-control" required />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Hobby" class="control-label"></label>
-                <input asp-for="Hobby" class="form-control" />
+                <input asp-for="Hobby" class="form-control" required />
                 <span asp-validation-for="Hobby" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Mobile" class="control-label"></label>
-                <input asp-for="Mobile" class="form-control" />
+                <input asp-for="Mobile" class="form-control" required />
                 <span asp-validation-for="Mobile" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IdCardOrBForm" class="control-label"></label>
-                <input asp-for="IdCardOrBForm" class="form-control" />
-                <span asp-validation-for="IdCardOrBForm" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="DateOfBirth" class="control-label"></label>
-                <input asp-for="DateOfBirth" class="form-control" />
+                <input asp-for="DateOfBirth"type="datetime-local" class="form-control" required />
                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="HasMobile" class="control-label d-block"></label>
-                <select asp-for="HasMobile" class ="form-control" asp-items="ViewBag.HasMobile"></select>
+                <select asp-for="HasMobile" class="form-control" asp-items="ViewBag.HasMobile"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Gender" class="control-label d-block"></label>
-                <select asp-for="Gender" class ="form-control" asp-items="ViewBag.Gender"></select>
+                <select asp-for="Gender" class="form-control" asp-items="ViewBag.Gender"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Education" class="control-label d-block"></label>
-                <select asp-for="Education" class ="form-control" asp-items="ViewBag.Education"></select>
+                <select asp-for="Education" class="form-control" asp-items="ViewBag.Education"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Profession" class="control-label d-block"></label>
-                <select asp-for="Profession" class ="form-control" asp-items="ViewBag.Profession"></select>
+                <label asp-for="Profession" class="control-label d-block "></label>
+                <select asp-for="Profession" class="form-control" asp-items="ViewBag.Profession"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Vehicle" class="control-label d-block"></label>
-                <select asp-for="Vehicle" class ="form-control" asp-items="ViewBag.Vehicle"></select>
+                <select asp-for="Vehicle" class="form-control" asp-items="ViewBag.Vehicle"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Family" class="control-label d-block"></label>
-                <select asp-for="Family" class ="form-control" asp-items="ViewBag.Family"></select>
+                <select asp-for="Family" class="form-control" asp-items="ViewBag.Family"></select>
             </div>
             <div class="form-group">
-                <label asp-for="About" class="control-label"></label>
-                <input asp-for="About" class="form-control" />
+                <label asp-for="About" class="control-label "></label>
+                <textarea asp-for="About" class="form-control" required ></textarea>
                 <span asp-validation-for="About" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Married" class="control-label"></label><br>
-                True: <input type="radio" value="true" asp-for="Married" class="form-control" /><br>
-                False: <input type="radio" value="false" asp-for="Married" class="form-control" />
-                <span asp-validation-for="Married" class="text-danger"></span>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-secondary active" style="margin-right:10px">
+                        <input type="radio" asp-for="Married" autocomplete="off" checked value="false"> Married:
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" asp-for="Married" autocomplete="off" value="true"> Not Married:
+                    </label>
+
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -106,47 +107,45 @@
     </div>
 </div>
 
+
+
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
 @section Scripts
 {
-<script>
+    <script>
+        var loadFile = function (event) {
+            var image = document.getElementById('output');
+            image.src = URL.createObjectURL(event.target.files[0]);
+        };
+       
 
-    $("#DateOfBirth").datepicker({
-        format: 'mm/dd/yyyy'
-    });
-    $('#Family').select2({
-        selectOnClose: true
-    });
-    $('#Profession').select2({
-        selectOnClose: true
-    });
-    $('#Vehicle').select2({
-        selectOnClose: true
-    }); 
-    $('#Gender').select2({
-        selectOnClose: true
-    });
-    $('#Gender').select2({
-        selectOnClose: true
-    });
-    
-    $('#HasMobile').select2({
-        selectOnClose: true
-    });
-    $('#Education').select2({
-        selectOnClose: true
-    });
-    $("#PersonForm").validate({
-        rules: {
-            field: {
-                required: true,
-                email: true
-            }
-        }
-    });
 
-</script>
+        $("#DateOfBirth").datepicker();
+        $('#Family').select2({
+            selectOnClose: true
+        });
+        $('#Profession').select2({
+            selectOnClose: true
+        });
+        $('#Vehicle').select2({
+            selectOnClose: true
+        });
+        $('#Gender').select2({
+            selectOnClose: true
+        });
+        $('#Gender').select2({
+            selectOnClose: true
+        });
+
+        $('#HasMobile').select2({
+            selectOnClose: true
+        });
+        $('#Education').select2({
+            selectOnClose: true
+        });
+       
+    </script>
 
 }

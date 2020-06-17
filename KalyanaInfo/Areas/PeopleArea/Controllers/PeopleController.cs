@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KalyanaInfo.Models;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
+using System.IO;
+using System.Linq.Expressions;
 
 namespace KalyanaInfo.Areas.PeopleArea.Controllers
 {
@@ -15,10 +19,12 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
     {
         private readonly kalyanadiaryContext _context;
         private readonly IActionContextAccessor accessor;
-        public PeopleController(kalyanadiaryContext context,IActionContextAccessor ac)
+        private readonly IHostEnvironment _ENV;
+        public PeopleController(kalyanadiaryContext context,IActionContextAccessor ac, IHostEnvironment env)
         {
             _context = context;
             accessor = ac;
+            _ENV = env;
         }
 
         // GET: PeopleArea/People
@@ -48,17 +54,20 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
             {
                 return NotFound();
             }
-
+           
+          
             return View(person);
         }
 
         // GET: PeopleArea/People/Create
         public IActionResult Create()
         {
+            
+            
             ViewData["Education"] = new SelectList(_context.Education, "Id", "Type");
             ViewData["Family"] = new SelectList(_context.Family, "Id", "Name");
             ViewData["Gender"] = new SelectList(_context.Gender, "Id", "GenderName");
-            ViewData["HasMobile"] = new SelectList(_context.Mobile, "Id", "HasMobile");
+            ViewData["HasMobile"] = new SelectList(_context.Mobile, "Id", "MobileType");
             ViewData["Profession"] = new SelectList(_context.Profession, "Id", "Name");
             ViewData["Vehicle"] = new SelectList(_context.Vehicle, "Id", "Name");
             return View();
@@ -69,22 +78,34 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Email,Password,SonOrDaughterOf,Image,Address,Hobby,Mobile,IdCardOrBForm,DateOfBirth,HasMobile,Gender,Education,Profession,Vehicle,Family,About,Married")] Person person)
+        public async Task<IActionResult> Create([Bind("Name,Email,Password,SonOrDaughterOf,Address,Hobby,Mobile,DateOfBirth,HasMobile,Gender,Education,Profession,Vehicle,Family,About,Married")] Person person,IFormFile image)
         {
-            if (ModelState.IsValid)
+            if(image!=null)
             {
-                UserLog log = new UserLog();
-                log.UserIp = accessor.ActionContext.HttpContext.Connection.RemoteIpAddress.ToString();
+                string DirPath = _ENV.ContentRootPath+"\\wwwroot\\Images\\PersonImages\\";
+                string FileEx = Path.GetExtension(image.FileName);
+                string fn = Guid.NewGuid()+FileEx;
+                string FinalFileName = DirPath+fn;
+                person.Image = fn;
+             
+                
+                FileStream stream = new FileStream(FinalFileName, FileMode.Create);
+               await image.CopyToAsync(stream);
+            }
+
+
+            if (ModelState.IsValid)
+            {   
+               
+              //  log.UserIp = accessor.ActionContext.HttpContext.Connection.RemoteIpAddress.ToString();
                 person.City = "Kalyana";
+                person.IdCardOrBForm = "3640212345678";
                 person.CreatedDate = DateTime.Now;
                 person.ModifiedDate = DateTime.Now;
                 _context.Add(person);
                 await _context.SaveChangesAsync();
-                Person p=await _context.Person.FindAsync(person);
-                log.UserId = p.Id;
-                log.Location = "Kalyana";
-                await _context.UserLog.AddAsync(log);
-
+                
+           
 
                 return RedirectToAction(nameof(Index));
             }
@@ -92,7 +113,7 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
             ViewData["Education"] = new SelectList(_context.Education, "Id", "Upto", person.Education);
             ViewData["Family"] = new SelectList(_context.Family, "Id", "Name", person.Family);
             ViewData["Gender"] = new SelectList(_context.Gender, "Id", "GenderName", person.Gender);
-            ViewData["HasMobile"] = new SelectList(_context.Mobile, "Id", "Type", person.HasMobile);
+            ViewData["HasMobile"] = new SelectList(_context.Mobile, "Id", "MobileType", person.HasMobile);
             ViewData["Profession"] = new SelectList(_context.Profession, "Id", "Name", person.Profession);
             ViewData["Vehicle"] = new SelectList(_context.Vehicle, "Id", "Name", person.Vehicle);
             return View(person);
@@ -117,6 +138,7 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
             ViewData["HasMobile"] = new SelectList(_context.Mobile, "Id", "HasMobile", person.HasMobile);
             ViewData["Profession"] = new SelectList(_context.Profession, "Id", "Name", person.Profession);
             ViewData["Vehicle"] = new SelectList(_context.Vehicle, "Id", "Name", person.Vehicle);
+            ViewBag.d = person.DateOfBirth;
             return View(person);
         }
 
@@ -125,7 +147,7 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Password,City,SonOrDaughterOf,Image,Address,Hobby,Mobile,IdCardOrBForm,CreatedDate,ModifiedDate,DateOfBirth,HasMobile,Gender,Education,Profession,Vehicle,Family,About,Married")] Person person)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Password,SonOrDaughterOf,Address,Hobby,Mobile,DateOfBirth,HasMobile,Gender,Education,Profession,Vehicle,Family,About,Married,CreatedDate,ModifiedDate,City,Image")] Person person,IFormFile image)
         {
             if (id != person.Id)
             {
@@ -134,8 +156,27 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
 
             if (ModelState.IsValid)
             {
+                if (image != null)
+                {
+                  
+                    {
+                        string DirPath = _ENV.ContentRootPath + "\\wwwroot\\Images\\PersonImages\\";
+                        string FileEx = Path.GetExtension(image.FileName);
+                        string fn = Guid.NewGuid() + FileEx;
+                        string FinalFileName = DirPath + fn;
+                        person.Image = fn;
+                        FileStream stream = new FileStream(FinalFileName, FileMode.Create);
+                        await image.CopyToAsync(stream);
+                      // person.City = "Kalyana";
+                      
+                    }
+                    
+                }
                 try
                 {
+                    person.ModifiedDate = DateTime.Now;
+                    person.IdCardOrBForm = "3640212345678";
+                    person.City = "Kalyana";
                     _context.Update(person);
                     await _context.SaveChangesAsync();
                 }
