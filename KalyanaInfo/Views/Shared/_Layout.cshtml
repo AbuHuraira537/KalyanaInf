@@ -43,7 +43,7 @@
         string cl = Context.Request.Path.ToString().ToLower();
 
 
-        @if (!((ho + cl).Contains("create")))
+        @if (!((ho + cl).Contains("people/create")))
         {
             @if (!((ho + cl).Contains("forgetpassword")))
             {
@@ -122,27 +122,33 @@
         <main role="main" class="pb-3">
             <div class="row">
                 <div class="col-md-2">
-                   
-                        @if (!((ho + cl).Contains("create")))
-                        {
 
-                            @if (!((ho + cl).Contains("login")))
+                    @if (!((ho + cl).Contains("people/create")))
+                    {
+
+                        @if (!((ho + cl).Contains("login")))
+                        {
+                            @if (!(string.IsNullOrEmpty(Context.Session.GetString("name"))))
                             {
-                                @if(!(string.IsNullOrEmpty(Context.Session.GetString("name"))))
-                                { 
                                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse ">
                                     @await Html.PartialAsync("_DashBoard")
                                 </div>
-                                }
                             }
                         }
-                        
-                    </div>
-               <div class="col-md-10">
+                    }
+
+                </div>
+                <div class="col-md-8">
                     @RenderBody()
                 </div>
+                @if (!((ho + cl).Contains("login")))
+                { 
+                    <div class="col-md-2">
+                        @await Html.PartialAsync("_DashBoard")
+                    </div>
+                }
             </div>
-        </main>
+</main>
     </div>
 
     <footer class="border-top footer text-muted">

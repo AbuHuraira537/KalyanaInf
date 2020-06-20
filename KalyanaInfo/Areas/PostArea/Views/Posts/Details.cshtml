@@ -4,63 +4,65 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Post</h1>
 
-<div>
-    <h4>Post</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Images)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Images)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PostType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PostType)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Video)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Video)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.About)
-        </dd>
-    </dl>
+<div class="card mb-3">
+    <div>
+        <h3 class="card-header"><img src="~/Images/PersonImages/@Model.User.Image" style="height:60px;width:60px;border-radius:50%;margin-right:4px" />@Html.DisplayFor(model => model.User.Name)<span>@Model.CreatedDate</span></h3>
+
+    </div>
+    <div class="card-body">
+        @if (!Model.Title.Equals("notitle"))
+        {
+            <h5 class="card-title">@Model.Title</h5>
+        }
+        <p class="card-text">@Model.Description</p>
+    </div>
+    @if (!Model.Images.Equals("noimage"))
+    {
+        <img style="height: 200px; width: 99%; display: block;" src="~/Images/PostImages/@Model.Images" alt="Card image">
+    }
+    @if (!Model.Video.Equals("video"))
+    {
+        <video style="height: 200px; width: 99%; display: block;" src="@Model.Video" controls autoplay></video>
+    }
+    <div class="card-body">
+        @if (!string.IsNullOrEmpty(Context.Session.GetString("name")))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-secondary">Edit</a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+        }
+        <a asp-action="Index" class="btn btn-secondary">Back</a>
+        <a asp-action="Index" class="btn btn-secondary"><span class="fa fa-share"></span></a>
+    </div>
+
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+<div id="disqus_thread"></div>
+@section Scripts
+{
+
+    <script>
+
+        /**
+        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+        var disqus_config = function () {
+        this.page.url = @Context.Request.Host@Context.Request.Path;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = @Model.Id; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+
+        (function () { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://kalyanainfo-azurewebsites-net.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+
+
+}

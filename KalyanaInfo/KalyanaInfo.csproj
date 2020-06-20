@@ -21,6 +21,9 @@
     <Folder Include="Areas\PeopleArea\Models\" />
     <Folder Include="Areas\PostArea\Data\" />
     <Folder Include="Areas\PostArea\Models\" />
+    <Folder Include="wwwroot\Images\PostImages\" />
+    <Folder Include="wwwroot\Videos\PersonVideos\" />
+    <Folder Include="wwwroot\Videos\PostVideos\" />
   </ItemGroup>
 
 </Project>

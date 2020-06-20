@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KalyanaInfo.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
+using System.IO;
 
 namespace KalyanaInfo.Areas.PostArea.Controllers
 {
@@ -13,10 +16,11 @@ namespace KalyanaInfo.Areas.PostArea.Controllers
     public class PostsController : Controller
     {
         private readonly kalyanadiaryContext _context;
-
-        public PostsController(kalyanadiaryContext context)
+        private readonly IHostEnvironment _ENV;
+        public PostsController(kalyanadiaryContext context,IHostEnvironment env)
         {
             _context = context;
+            _ENV = env;
         }
 
         // GET: PostArea/Posts
@@ -48,7 +52,7 @@ namespace KalyanaInfo.Areas.PostArea.Controllers
         // GET: PostArea/Posts/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Person, "Id", "About");
+           
             return View();
         }
 
@@ -57,15 +61,62 @@ namespace KalyanaInfo.Areas.PostArea.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Images,CreatedDate,ModifiedDate,PostType,Video,UserId")] Post post)
+        public async Task<IActionResult> Create([Bind("Description,Title")] Post post,IFormFile image, IFormFile video)
         {
+            if(image!=null)
+            {
+                string DirPath = _ENV.ContentRootPath + "\\wwwroot\\Images\\PostImages\\";
+                string FileEx = Path.GetExtension(image.FileName);
+                string fn = Guid.NewGuid() + FileEx;
+                string FinalFileName = DirPath + fn;
+                post.Images = fn;
+
+
+                FileStream stream = new FileStream(FinalFileName, FileMode.Create);
+                await image.CopyToAsync(stream);
+            }
+            else
+            {
+                post.Images = "noimage";
+            }
+            if(video!=null)
+            {
+                string DirPath = _ENV.ContentRootPath + "\\wwwroot\\Videos\\PostVideos\\";
+                string FileEx = Path.GetExtension(video.FileName);
+                string VideoName = Guid.NewGuid() + FileEx;
+                string FinalFileName = DirPath + VideoName;
+                post.Video = VideoName;
+                 FileStream stream = new FileStream(FinalFileName, FileMode.Create);
+                await video.CopyToAsync(stream);
+
+
+            }
+            else
+            {
+                post.Video = "novideo";
+            }
+            if(post.Title==null)
+            {
+                post.Title = "notitle";
+            }
+
+            post.CreatedDate = DateTime.Now;
+            post.ModifiedDate = DateTime.Now;
+            post.PostType = "public";
+            if (post.Description == null)
+            {
+                ModelState.AddModelError("", "Description cant be null");
+                return View(post);
+            }
+            post.UserId = (HttpContext.Session.GetInt32("id"))??default(int);
             if (ModelState.IsValid)
             {
+
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Person, "Id", "About", post.UserId);
+           
             return View(post);
         }
 

@@ -13,7 +13,7 @@
     }
     else
     {
-    <img src="~/Images/PersonImages/@Html.DisplayFor(model => model.Image)" alt="" class="img-fluid w-10 h-5" />
+    <img src="~/Images/PersonImages/@Html.DisplayFor(model => model.Image)" width="150" height="150" alt="" class="img-fluid" />
     }
 </div>
 <div>
@@ -110,6 +110,12 @@
             @Html.DisplayFor(model => model.EducationNavigation.Type)
         </dd>
         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EducationNavigation)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EducationNavigation.Upto)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.FamilyNavigation)
         </dt>
         <dd class="col-sm-10">
@@ -122,10 +128,10 @@
             @Html.DisplayFor(model => model.GenderNavigation.GenderName)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.HasMobileNavigation)
+            @Html.DisplayNameFor(model => model.HasMobileNavigation.MobileType)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.HasMobileNavigation.HasMobile)
+            @Html.DisplayFor(model => model.HasMobileNavigation.MobileType)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ProfessionNavigation)
@@ -139,7 +145,7 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.VehicleNavigation.Name)
         </dd>
-       
+
     </dl>
     @if((!(string.IsNullOrEmpty(Context.Session.GetString("mobile"))))&& Context.Session.GetString("mobile").Equals(Model.Mobile))
     { 
