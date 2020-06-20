@@ -12,53 +12,133 @@
 
 </head>
 <body>
+    <!-- Load Facebook SDK for JavaScript -->
+    <div id="fb-root"></div>
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                xfbml: true,
+                version: 'v7.0'
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+
+    <!-- Your Chat Plugin code -->
+    <div class="fb-customerchat"
+         attribution="setup_tool"
+         page_id="103728531390359"
+         theme_color="#7646ff"
+         logged_in_greeting="Hi! How can we help you at this page?"
+         logged_out_greeting="Hi! How can we help you at this page?">
+    </div>
     @{
-        string path1 = Context.Request.Host.ToString();
-        string p2 = Context.Request.Path.ToString();
-
-    }
-    @if (!(Context.Request.Host.ToString() + @Context.Request.Path.ToString()).Contains("create"))
-    {
+        string ho = Context.Request.Host.ToString().ToLower();
+        string cl = Context.Request.Path.ToString().ToLower();
 
 
-        <header>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-                <div class="container">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">KalyanaInfo</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+        @if (!((ho + cl).Contains("create")))
+        {
+            @if (!((ho + cl).Contains("forgetpassword")))
+            {
+            @if (!((ho + cl).Contains("login")))
+            {
+                <header>
+                    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                        <div class="container">
+                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">KalyanaInfo</a>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                                    aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
 
-                    </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                        <partial name="_LoginPartial" />
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="PeopleArea" asp-controller="People" asp-action="Index">People</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-        </header>
-    }
+                            </button>
+                            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                                @if (!(string.IsNullOrEmpty(Context.Session.GetString("mobile"))))
+                                {<ul class="navbar-nav flex-grow-1 float-lg-right">
+                                        <li><img id="output" width="60" height="60" style="border:1px solid black;border-radius:50%" src="~/Images/PersonImages/@Context.Session.GetString("img")" /></li>
+                                        <li class="nav-link text-dark">Name:@Context.Session.GetString("name")</li>
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <ul class="navbar-nav flex-grow-1 float-lg-right">
+                                        <li class="nav-item">
+                                            <a class="nav-link text-dark" asp-area="PeopleArea" asp-controller="People" asp-action="Create">Register</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link text-dark" asp-area="PeopleArea" asp-controller="People" asp-action="LogIn">Login</a>
+                                        </li>
+                                    </ul>
+                                }
+                            <ul class="navbar-nav flex-grow-1">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="PeopleArea" asp-controller="People" asp-action="Index">People</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="PostArea" asp-controller="Posts" asp-action="Index">Posts</a>
+                                </li>
+                            </ul>
+                                <div>
+                                    <form asp-area="PeopleArea" asp-controller="People" asp-action="Index" class="form-inline my-2 my-lg-0">
+                                        <div>
+                                            <input class="form-control form-inline mr-sm-2" type="text" placeholder="Search" id="query" name="query">
+                                            <select class="form-control" id="by" name="by">
+                                                <option value="Name">Name</option>
+                                                <option value="Address">Address</option>
+                                                <option value="Post">Post</option>
+                                                <option value="Contact">Contact</option>
+                                                <option value="Profession">Profession</option>
+                                                <option value="School">School</option>
+                                                <option value="Shope">Shope</option>
+                                                <option value="Video">Video</option>
 
+
+                                            </select>
+                                            <button class="btn btn-secondary my-2 my-sm-0" type="submit"><span class="fa fa-search"></span></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                </header>
+            }
+            }
+        }
+        }
     <div class="container" style="max-width:1340px">
         <main role="main" class="pb-3">
             <div class="row">
                 <div class="col-md-2">
+                   
+                        @if (!((ho + cl).Contains("create")))
+                        {
 
-                    <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse ">
-                        @await Html.PartialAsync("_DashBoard")
+                            @if (!((ho + cl).Contains("login")))
+                            {
+                                @if(!(string.IsNullOrEmpty(Context.Session.GetString("name"))))
+                                { 
+                                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse ">
+                                    @await Html.PartialAsync("_DashBoard")
+                                </div>
+                                }
+                            }
+                        }
+                        
                     </div>
-                </div>
-                <div class="col-md-10">
+               <div class="col-md-10">
                     @RenderBody()
                 </div>
             </div>
@@ -71,13 +151,13 @@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>

@@ -14,8 +14,9 @@
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <input asp-for="Image" type="hidden" />
             <div class="form-group">
-                <p><input id="image" name="image" type="file" accept="image/*" onchange="loadFile(event)" style="display: none;" ></p>
+                <p><input id="image" name="image" type="file" accept="image/*" onchange="loadFile(event)" style="display: none;"></p>
                 <p><label for="image" style="cursor: pointer;">Upload Image</label></p>
                 <p><img id="output" width="60" height="60" style="border:1px solid black;border-radius:50%" src="~/Images/PersonImages/@Html.DisplayFor(model=>model.Image)" /></p>
                 <span asp-validation-for="Image" class="text-danger"></span>
@@ -52,7 +53,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Mobile" class="control-label"></label>
-                <input asp-for="Mobile" class="form-control" required />
+                <input asp-for="Mobile" class="form-control" pattern="[0-9]{11}" maxlength="11" min="11" placeholder="03036405108" required />
                 <span asp-validation-for="Mobile" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -101,9 +102,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <input asp-for="Image" type="hidden" />
-                <input asp-for="CreatedDate"  class="form-control" type="hidden"/>
-                <input asp-for="ModifiedDate"  class="form-control"type="hidden"/>
+
+                <input asp-for="CreatedDate" class="form-control" type="hidden" />
+                <input asp-for="ModifiedDate" class="form-control" type="hidden" />
 
             </div>
 
@@ -125,6 +126,7 @@
             var image = document.getElementById('output');
             image.src = URL.createObjectURL(event.target.files[0]);
         };
+        
 
       
         $("#DateOfBirth").datepicker();

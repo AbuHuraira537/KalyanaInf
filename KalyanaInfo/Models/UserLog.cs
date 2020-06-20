@@ -5,6 +5,7 @@ namespace KalyanaInfo.Models
 {
     public partial class UserLog
     {
+        public int Id { get; set; }
         public int UserId { get; set; }
         public string UserIp { get; set; }
         public DateTime? UserLoginTime { get; set; }

@@ -12,6 +12,8 @@ namespace KalyanaInfo.Models
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
         public string PostType { get; set; }
+
+        public string Video { get; set; }
         public int UserId { get; set; }
 
         public virtual Person User { get; set; }

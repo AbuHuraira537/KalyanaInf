@@ -4,26 +4,37 @@
 @{
     ViewData["Title"] = "Details";
 }
-    <div class="mr-auto ml-auto w-10 h-5 bg-info d-inline-block" >
-        @if (string.IsNullOrEmpty(Model.Image))
-        {
-            <img src = "http://lorempixel.com/400/200/sports/1/Dummy-Text/" class="img-fluid w-10 h-5" />
-        }
-        else
-        {
-        <img src="~/Images/PersonImages/@Html.DisplayFor(model => model.Image)" alt="" class="img-fluid w-10 h-5"   />
-        }
-    </div>
-    <div class="mr-auto ml-auto mt-3 ">
-        <h3>@Html.DisplayFor(model=>model.Name)</h3>
-    </div>
-    <hr />
+
+
+<div class="mr-auto ml-auto w-10 h-5 bg-info d-inline-block">
+    @if (string.IsNullOrEmpty(Model.Image))
+    {
+    <img src="http://lorempixel.com/400/200/sports/1/Dummy-Text/" class="img-fluid w-10 h-5" />
+    }
+    else
+    {
+    <img src="~/Images/PersonImages/@Html.DisplayFor(model => model.Image)" alt="" class="img-fluid w-10 h-5" />
+    }
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-secondary">Edit</a> 
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">How Other See</a> 
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-danger">Remove</a> 
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<div class="mr-auto ml-auto mt-3 ">
+    <h3>@Html.DisplayFor(model => model.Name)</h3>
+</div>
+<hr />
 <div>
     <h4>@Html.DisplayFor(model => model.Name) Details:</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-12 thead-light border-bottom mt-3" style="color:royalblue">Personal Info</dt>
+        <dt class="col-sm-12 thead-light border-bottom mt-3" style="color:royalblue" id="Pinfo"><span class="fa fa-chevron-circle-down"></span> Personal Info</dt>
         <dd></dd>
+    </dl>
+    <dl id="PInfo">
         <dt class="col-sm-2"> @Html.DisplayNameFor(model => model.Name)</dt>
         <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
         <dt class="col-sm-2">
@@ -44,8 +55,12 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.SonOrDaughterOf)
         </dd>
-        <dt class="col-sm-12 font-weight-bold border-bottom mt-3" style="color:royalblue">Contact Info</dt>
+    </dl>
+    <dl>
+        <dt class="col-sm-12 font-weight-bold border-bottom mt-3" style="color:royalblue" id="Cinfo"><span class="fa fa-chevron-circle-down"></span>Contact Info</dt>
         <dd></dd>
+    </dl>
+    <dl id="CInfo">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Mobile)
         </dt>
@@ -58,8 +73,12 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Address)
         </dd>
-        <dt class="col-sm-12 border-bottom mt-3" style="color:royalblue">Other Info</dt>
+    </dl>
+    <dl>
+        <dt class="col-sm-12 border-bottom mt-3" style="color:royalblue" id="Oinfo"><span class="fa fa-chevron-circle-down"></span>Other Info</dt>
         <dd></dd>
+    </dl>
+    <dl id="OInfo">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Hobby)
         </dt>
@@ -120,14 +139,18 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.VehicleNavigation.Name)
         </dd>
-        <dt class="col-sm-2 mb-3">
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
-
-        <dt class="col-sm-12 font-weight-bold border-bottom mt-3" style="color:royalblue">About Login,Signup Details</dt>
+       
+    </dl>
+    @if((!(string.IsNullOrEmpty(Context.Session.GetString("mobile"))))&& Context.Session.GetString("mobile").Equals(Model.Mobile))
+    { 
+    <dl>
+        <dt class="col-sm-12 font-weight-bold border-bottom mt-3" style="color:royalblue" id="Linfo"><span class="fa fa-chevron-circle-down"></span>About Login,Signup Details</dt>
         <dd> </dd>
+    </dl>
+    <dl id="LInfo">
         <dt class="col-sm-12 font-weight-bold">Login User</dt>
         <dd></dd>
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Mobile)
         </dt>
@@ -140,8 +163,17 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Password)
         </dd>
-        <dt class="col-sm-12 font-weight-bold border-bottom mt-3" style="color:royalblue"> Sign up date and last modified</dt>
-
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdCardOrBForm)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdCardOrBForm)
+        </dd>
+    </dl>
+    <dl>
+        <dt class="col-sm-12 font-weight-bold border-bottom mt-3" style="color:royalblue" id="Sinfo"><span class="fa fa-chevron-circle-down"></span> Sign up date and last modified</dt>
+    </dl>
+    <dl id="SInfo">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CreatedDate)
         </dt>
@@ -154,13 +186,93 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ModifiedDate)
         </dd>
-        <dt class="col-sm-12 font-weight-bold border-bottom mt-3" style="color:royalblue"> Login time and ip</dt>
-        @ViewBag.l
     </dl>
+    <dl>
+        <dt class="col-sm-12 font-weight-bold border-bottom mt-3" style="color:royalblue" id="Ltinfo"><span class="fa fa-chevron-circle-down"></span> Login time and ip</dt>
+    </dl>
+    <dl class="LTInfo">
+        <dt class="col-sm-2">
+            UserIp:
+        </dt>
+        <dd class="col-sm-10">
+            @ViewBag.log.UserIp
+        </dd>
+        <dt class="col-sm-2">User LogIn Time:</dt>
+        <dd class="col-sm-10">
+            @ViewBag.log.UserLoginTime
+        </dd>
+        <dt class="col-sm-2">UserLocation:</dt>
+        <dd class="col-sm-10">
+            @ViewBag.log.Location
+        </dd>
+        <dt class="col-sm-2">UserID:</dt>
+        <dd class="col-sm-10">
+            @ViewBag.log.UserId
+        </dd>
+        
+
+    </dl>
+    }
+
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Edit" asp-route-id="@Model.Id">how other see yor detail.</a> |
-    <a asp-action="Edit" asp-route-id="@Model.Id">Remove your Account</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+<div id="disqus_thread"></div>
+@section Scripts
+{
+    <script>
+
+        /**
+        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+
+        var disqus_config = function () {
+        this.page.url = @Context.Request.Host@Context.Request.Path;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = @Model.Id; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+
+        (function () { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://kalyanainfo-azurewebsites-net.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+       
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <script>
+
+        $(function () {
+           
+            $("#PInfo").hide();
+            $("#CInfo").hide();
+            $("#LInfo").hide();
+            $("#SInfo").hide();
+            $("#OInfo").hide();
+            $("#LTInfo").hide();
+        });
+        $("#Pinfo").click(function () {
+            $("#PInfo").toggle();
+        });
+
+        $("#Cinfo").click(function () {
+            $("#CInfo").toggle();
+        });
+        $("#Oinfo").click(function () {
+            $("#OInfo").toggle();
+        });
+        $("#Linfo").click(function () {
+            $("#LInfo").toggle();
+        });
+        $("#Sinfo").click(function () {
+            $("#SInfo").toggle();
+        });
+
+        $("#Ltinfo").click(function () {
+            $("#LTInfo").toggle();
+        });
+
+    </script>
+
+
+
+
+}

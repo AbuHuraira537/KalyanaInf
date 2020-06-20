@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using System.IO;
 using System.Linq.Expressions;
+using KalyanaInfo.Areas.Validators;
+using System.Net.Mail;
+using Microsoft.Data.SqlClient.Server;
 
 namespace KalyanaInfo.Areas.PeopleArea.Controllers
 {
@@ -28,10 +31,23 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
         }
 
         // GET: PeopleArea/People
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string query,string By)
         {
+
+            if (query != null)
+            {
+                ViewBag.b = By;
+
+                var kalyanadiaryContext = _context.Person.Include(p => p.EducationNavigation).Include(p => p.FamilyNavigation).Include(p => p.GenderNavigation).Include(p => p.HasMobileNavigation).Include(p => p.ProfessionNavigation).Include(p => p.VehicleNavigation).Where(p=>p.Name.Contains(query));
+                return View(await kalyanadiaryContext.ToListAsync());
+                
+            }
+            else
+            { 
+
             var kalyanadiaryContext = _context.Person.Include(p => p.EducationNavigation).Include(p => p.FamilyNavigation).Include(p => p.GenderNavigation).Include(p => p.HasMobileNavigation).Include(p => p.ProfessionNavigation).Include(p => p.VehicleNavigation);
             return View(await kalyanadiaryContext.ToListAsync());
+            }
         }
 
         // GET: PeopleArea/People/Details/5
@@ -50,6 +66,8 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
                 .Include(p => p.ProfessionNavigation)
                 .Include(p => p.VehicleNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            var logs = await _context.UserLog.Where(a=>a.UserId==id).FirstOrDefaultAsync();
+            ViewBag.log = logs;
             if (person == null)
             {
                 return NotFound();
@@ -78,9 +96,10 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Email,Password,SonOrDaughterOf,Address,Hobby,Mobile,DateOfBirth,HasMobile,Gender,Education,Profession,Vehicle,Family,About,Married")] Person person,IFormFile image)
+        public async Task<IActionResult> Create([Bind("Name,Email,Password,SonOrDaughterOf,Address,Hobby,Mobile,DateOfBirth,HasMobile,Gender,Education,Profession,Vehicle,Family,About,Married,IdCardOrBForm")] Person person,IFormFile image)
         {
-            if(image!=null)
+            string res = "";
+            if (image!=null)
             {
                 string DirPath = _ENV.ContentRootPath+"\\wwwroot\\Images\\PersonImages\\";
                 string FileEx = Path.GetExtension(image.FileName);
@@ -92,21 +111,42 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
                 FileStream stream = new FileStream(FinalFileName, FileMode.Create);
                await image.CopyToAsync(stream);
             }
-
-
+            if (person.IdCardOrBForm == null)
+            {
+                person.IdCardOrBForm = "Not Provided";
+            }
             if (ModelState.IsValid)
-            {   
-               
-              //  log.UserIp = accessor.ActionContext.HttpContext.Connection.RemoteIpAddress.ToString();
-                person.City = "Kalyana";
-                person.IdCardOrBForm = "3640212345678";
-                person.CreatedDate = DateTime.Now;
-                person.ModifiedDate = DateTime.Now;
-                _context.Add(person);
-                await _context.SaveChangesAsync();
-                
-           
+            {
+                IList <Person> p= _context.Person.ToList();
+                foreach(Person per in p)
+                {
+                    if(per.Mobile==person.Mobile)
+                    {
+                        ModelState.AddModelError(string.Empty, "This Mobile Number Already Exist");
+                        return View(person);
+                    }
+                }
 
+                {
+                    //  log.UserIp = accessor.ActionContext.HttpContext.Connection.RemoteIpAddress.ToString();
+                    person.City = "Kalyana";
+                    
+                    person.CreatedDate = DateTime.Now;
+                    person.ModifiedDate = DateTime.Now;
+                    Validations validation = new Validations();
+                    res = validation.PersonValidation(person);
+                    if (res == "")
+                    {
+                        _context.Add(person);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, res);
+                        return View(person);
+                    }
+
+                }
                 return RedirectToAction(nameof(Index));
             }
             
@@ -167,7 +207,7 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
                         person.Image = fn;
                         FileStream stream = new FileStream(FinalFileName, FileMode.Create);
                         await image.CopyToAsync(stream);
-                      // person.City = "Kalyana";
+                      //person.City = "Kalyana";
                       
                     }
                     
@@ -241,5 +281,98 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
         {
             return _context.Person.Any(e => e.Id == id);
         }
+
+        public async Task<IActionResult> LogIn(string mob,string pass)
+        {
+            Person p = await _context.Person.Where(a => a.Mobile == mob && a.Password == pass).FirstOrDefaultAsync();
+            if(p!=null)
+            {
+                HttpContext.Session.SetString("mobile",p.Mobile);
+                HttpContext.Session.SetString("name", p.Name);
+                HttpContext.Session.SetString("img", p.Image);
+                HttpContext.Session.SetInt32("id", p.Id);
+                UserLog log= await _context.UserLog.Where(user => user.UserId == p.Id).FirstOrDefaultAsync();
+                if (log == null)
+                {
+                    log = new UserLog
+                    {
+                        UserId = p.Id,
+                        UserIp = accessor.ActionContext.HttpContext.Connection.RemoteIpAddress.ToString(),
+                        UserLoginTime = DateTime.Now,
+                        Location = p.Address
+                    };
+                    await _context.UserLog.AddAsync(log);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    log.UserId = p.Id;
+                    log.UserIp = accessor.ActionContext.HttpContext.Connection.RemoteIpAddress.ToString();
+                    log.UserLoginTime = DateTime.Now;
+                    log.Location = p.Address;
+                    _context.Update(log);
+                   await _context.SaveChangesAsync();
+                }
+              
+                return RedirectToAction("Index","People",new { query ="",by=""});
+            }
+            
+            
+            return View(p);
+
+        }
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return View(nameof(Index));
+        }
+        [HttpGet]
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async  Task<IActionResult> ForgetPassword(string mob,string email)
+        {
+            Person p = await _context.Person.Where(p => p.Mobile == mob && p.IdCardOrBForm == email).FirstOrDefaultAsync();
+            if(p!=null)
+            {
+                try
+                {
+                    MailMessage mail = new MailMessage
+                    {
+                        From = new MailAddress("kalyanainfo967@gmail.com", "KalyanaInfo")
+                    };
+                    mail.To.Add(p.Email);
+                    mail.Subject = "New Password";
+                    mail.Body = "<h1>Well Come To KalyanaInfo Once again:</h1></br>" +
+                        "<h2>Your password is: </h2><h2>" + p.Password + "</h2>";
+                    mail.IsBodyHtml = true;
+
+                    SmtpClient server = new SmtpClient
+                    {   
+                        Host = "smtp.gmail.com",
+                        UseDefaultCredentials = false,
+                        Credentials = new System.Net.NetworkCredential("kalyanainfo967@gmail.com", "bsef17m537"),
+                        Port = 587,
+                        EnableSsl = true
+                       
+                    };
+                    server.Send(mail);
+                    return View("Success");
+                }
+                catch(Exception e)
+                {
+                    ViewBag.er = e.Message;
+                    return View();
+                }
+            }
+            ViewBag.er = "Recovery Email or Mobile is invalid";
+            return View();
+        }
+
+
     }
 }

@@ -1,10 +1,10 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace KalyanaInfo.Models
 {
+#pragma warning disable IDE1006 // Naming Styles
     public partial class kalyanadiaryContext : DbContext
+#pragma warning restore IDE1006 // Naming Styles
     {
         public kalyanadiaryContext()
         {
@@ -32,14 +32,14 @@ namespace KalyanaInfo.Models
         public virtual DbSet<Vehicle> Vehicle { get; set; }
         public virtual DbSet<Video> Video { get; set; }
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-//                optionsBuilder.UseSqlServer("Server=den1.mssql8.gear.host;Database=kalyanadiary;User ID=kalyanadiary; Password=Xv4ZV?Uh4T-M;Trusted_Connection=False;");
-//            }
-//        }
+        //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //        {
+        //            if (!optionsBuilder.IsConfigured)
+        //            {
+        //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+        //                optionsBuilder.UseSqlServer("Server=den1.mssql8.gear.host;Database=kalyanadiary;User ID=kalyanadiary; Password=Xv4ZV?Uh4T-M;Trusted_Connection=False;");
+        //            }
+        //        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -330,6 +330,9 @@ namespace KalyanaInfo.Models
                     .IsRequired()
                     .HasColumnName("title")
                     .HasMaxLength(50);
+                entity.Property(e => e.Video)
+                    .HasColumnName("video")
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 
@@ -499,10 +502,10 @@ namespace KalyanaInfo.Models
 
             modelBuilder.Entity<UserLog>(entity =>
             {
-                entity.HasNoKey();
+
 
                 entity.ToTable("user_log");
-
+                entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.Location)
                     .HasColumnName("location")
                     .HasMaxLength(50);
