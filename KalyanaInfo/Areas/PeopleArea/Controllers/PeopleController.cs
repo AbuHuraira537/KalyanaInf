@@ -346,15 +346,6 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
 
         public async Task<IActionResult> LogIn(string mob,string pass)
         {
-            Administrator administrator = new Administrator();
-            if(administrator.Login(mob,pass))
-            {
-                HttpContext.Session.SetString("mobile",administrator.Key);
-                HttpContext.Session.SetString("name", administrator.Name);
-                HttpContext.Session.SetString("img", "noimage");
-                HttpContext.Session.SetInt32("id",-90);
-                return RedirectToAction("Index", "People", new { query = "", by = "" });
-            }
             
             Person p = await _context.Person.Where(a => a.Mobile == mob && a.Password == pass).FirstOrDefaultAsync();
             
