@@ -365,6 +365,10 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
                 HttpContext.Session.SetString("img", p.Image);
                 HttpContext.Session.SetInt32("id", p.Id);
                 UserLog log= await _context.UserLog.Where(user => user.UserId == p.Id).FirstOrDefaultAsync();
+                List<Post> posts= await _context.Post.Where(per => per.UserId == p.Id).ToListAsync();
+                List<Shope> shopes = await _context.Shope.Where(per => per.UserId == p.Id).ToListAsync();
+                HttpContext.Session.SetInt32("postcount",posts.Count());
+                HttpContext.Session.SetInt32("shopecount", shopes.Count());
                 if (log == null)
                 {
                     log = new UserLog
