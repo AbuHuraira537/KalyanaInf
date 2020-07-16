@@ -5,249 +5,325 @@
     ViewData["Title"] = "Details";
 }
 
+    <section id="person">
+        <div class="mr-auto ml-auto w-10 h-5 bg-info d-inline-block">
+            @if (string.IsNullOrEmpty(Model.Image))
+            {
+                <img src="http://lorempixel.com/400/200/sports/1/Dummy-Text/" class="img-fluid w-10 h-5" />
+            }
+            else
+            {
+                <img src="~/Images/PersonImages/@Html.DisplayFor(model => model.Image)" style="height: 100px; width: 99%; display: block; margin-bottom:3px" />
+            }
+        </div>
+        <div>
+            @if ((Context.Session.GetInt32("id") == Model.Id))
+            {
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-secondary">Edit</a>
+            }
+            @if ((Context.Session.GetInt32("id") == Model.Id) )
+            {
+                <a class="btn btn-danger " data-toggle="modal" data-target="#exampleModal-@Model.Id">RemoveAccount</a>
+            }
+            <a asp-action="Index" class="btn btn-primary">Home</a>
+        </div>
+        <div class="modal" id="exampleModal-@Model.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Really want to delete...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger" id="delperson" >ConfirmDelete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<div class="mr-auto ml-auto w-10 h-5 bg-info d-inline-block">
-    @if (string.IsNullOrEmpty(Model.Image))
-    {
-    <img src="http://lorempixel.com/400/200/sports/1/Dummy-Text/" class="img-fluid w-10 h-5" />
-    }
-    else
-    {
-    <img src="~/Images/PersonImages/@Html.DisplayFor(model => model.Image)" width="150" height="150" alt="" class="img-fluid" />
-    }
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-secondary">Edit</a> 
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">How Other See</a> 
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-danger">Remove</a> 
-    <a asp-action="Index">Back to List</a>
-</div>
+        <div class="mr-auto ml-auto mt-3 ">
+            <h3>@Html.DisplayFor(model => model.Name)</h3>
+        </div>
+        <hr />
+        <div>
+            <h4>@Html.DisplayFor(model => model.Name) Details:</h4>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-12 thead-light border-bottom mt-3" style="color:royalblue" id="Pinfo"><span class="fa fa-chevron-circle-down"></span> Personal Info</dt>
+                <dd></dd>
+            </dl>
+            <dl id="PInfo">
+                <dt class="col-sm-2"> @Html.DisplayNameFor(model => model.Name)</dt>
+                <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.City)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.City)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.SonOrDaughterOf)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.SonOrDaughterOf)
+                </dd>
+            </dl>
+            <dl>
+                <dt class="col-sm-12 font-weight-bold border-bottom mt-3" style="color:royalblue" id="Cinfo"><span class="fa fa-chevron-circle-down"></span>Contact Info</dt>
+                <dd></dd>
+            </dl>
+            <dl id="CInfo">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Mobile)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Mobile)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Address)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Address)
+                </dd>
+            </dl>
+            <dl>
+                <dt class="col-sm-12 border-bottom mt-3" style="color:royalblue" id="Oinfo"><span class="fa fa-chevron-circle-down"></span>Other Info</dt>
+                <dd></dd>
+            </dl>
+            <dl id="OInfo">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Hobby)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Hobby)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.DateOfBirth)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.DateOfBirth)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.About)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.About)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Married)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Married)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.EducationNavigation)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.EducationNavigation.Type)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.EducationNavigation)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.EducationNavigation.Upto)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.FamilyNavigation)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.FamilyNavigation.Name)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.GenderNavigation)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.GenderNavigation.GenderName)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.HasMobileNavigation.MobileType)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.HasMobileNavigation.MobileType)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ProfessionNavigation)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ProfessionNavigation.Name)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.VehicleNavigation)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.VehicleNavigation.Name)
+                </dd>
 
-<div class="mr-auto ml-auto mt-3 ">
-    <h3>@Html.DisplayFor(model => model.Name)</h3>
-</div>
-<hr />
-<div>
-    <h4>@Html.DisplayFor(model => model.Name) Details:</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-12 thead-light border-bottom mt-3" style="color:royalblue" id="Pinfo"><span class="fa fa-chevron-circle-down"></span> Personal Info</dt>
-        <dd></dd>
-    </dl>
-    <dl id="PInfo">
-        <dt class="col-sm-2"> @Html.DisplayNameFor(model => model.Name)</dt>
-        <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.City)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.City)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.SonOrDaughterOf)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.SonOrDaughterOf)
-        </dd>
-    </dl>
-    <dl>
-        <dt class="col-sm-12 font-weight-bold border-bottom mt-3" style="color:royalblue" id="Cinfo"><span class="fa fa-chevron-circle-down"></span>Contact Info</dt>
-        <dd></dd>
-    </dl>
-    <dl id="CInfo">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Mobile)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Mobile)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Address)
-        </dd>
-    </dl>
-    <dl>
-        <dt class="col-sm-12 border-bottom mt-3" style="color:royalblue" id="Oinfo"><span class="fa fa-chevron-circle-down"></span>Other Info</dt>
-        <dd></dd>
-    </dl>
-    <dl id="OInfo">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Hobby)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Hobby)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DateOfBirth)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DateOfBirth)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.About)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.About)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Married)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Married)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.EducationNavigation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EducationNavigation.Type)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.EducationNavigation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EducationNavigation.Upto)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.FamilyNavigation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FamilyNavigation.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.GenderNavigation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.GenderNavigation.GenderName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.HasMobileNavigation.MobileType)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.HasMobileNavigation.MobileType)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ProfessionNavigation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProfessionNavigation.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.VehicleNavigation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.VehicleNavigation.Name)
-        </dd>
+            </dl>
+            @if ((!(string.IsNullOrEmpty(Context.Session.GetString("mobile")))) && Context.Session.GetString("mobile").Equals(Model.Mobile))
+            {
+                <dl>
+                    <dt class="col-sm-12 font-weight-bold border-bottom mt-3" style="color:royalblue" id="Linfo"><span class="fa fa-chevron-circle-down"></span>About Login,Signup Details</dt>
+                    <dd> </dd>
+                </dl>
+                <dl id="LInfo">
+                    <dt class="col-sm-12 font-weight-bold">Login User</dt>
+                    <dd></dd>
 
-    </dl>
-    @if((!(string.IsNullOrEmpty(Context.Session.GetString("mobile"))))&& Context.Session.GetString("mobile").Equals(Model.Mobile))
-    { 
-    <dl>
-        <dt class="col-sm-12 font-weight-bold border-bottom mt-3" style="color:royalblue" id="Linfo"><span class="fa fa-chevron-circle-down"></span>About Login,Signup Details</dt>
-        <dd> </dd>
-    </dl>
-    <dl id="LInfo">
-        <dt class="col-sm-12 font-weight-bold">Login User</dt>
-        <dd></dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Mobile)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Mobile)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Password)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Password)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.RecoveryEmail)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.RecoveryEmail)
+                    </dd>
+                </dl>
+                <dl>
+                    <dt class="col-sm-12 font-weight-bold border-bottom mt-3" style="color:royalblue" id="Sinfo"><span class="fa fa-chevron-circle-down"></span> Sign up date and last modified</dt>
+                </dl>
+                <dl id="SInfo">
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.CreatedDate)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.CreatedDate)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.ModifiedDate)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.ModifiedDate)
+                    </dd>
+                </dl>
+                <dl>
+                    <dt class="col-sm-12 font-weight-bold border-bottom mt-3" style="color:royalblue" id="Ltinfo"><span class="fa fa-chevron-circle-down"></span> Login time and ip</dt>
+                </dl>
+                <dl class="LTInfo">
+                    <dt class="col-sm-2">
+                        UserIp:
+                    </dt>
+                    <dd class="col-sm-10">
+                        @ViewBag.log.UserIp
+                    </dd>
+                    <dt class="col-sm-2">User LogIn Time:</dt>
+                    <dd class="col-sm-10">
+                        @ViewBag.log.UserLoginTime
+                    </dd>
+                    <dt class="col-sm-2">UserLocation:</dt>
+                    <dd class="col-sm-10">
+                        @ViewBag.log.Location
+                    </dd>
+                    <dt class="col-sm-2">UserID:</dt>
+                    <dd class="col-sm-10">
+                        @ViewBag.log.UserId
+                    </dd>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Mobile)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Mobile)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Password)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IdCardOrBForm)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.IdCardOrBForm)
-        </dd>
-    </dl>
-    <dl>
-        <dt class="col-sm-12 font-weight-bold border-bottom mt-3" style="color:royalblue" id="Sinfo"><span class="fa fa-chevron-circle-down"></span> Sign up date and last modified</dt>
-    </dl>
-    <dl id="SInfo">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CreatedDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedDate)
-        </dd>
-    </dl>
-    <dl>
-        <dt class="col-sm-12 font-weight-bold border-bottom mt-3" style="color:royalblue" id="Ltinfo"><span class="fa fa-chevron-circle-down"></span> Login time and ip</dt>
-    </dl>
-    <dl class="LTInfo">
-        <dt class="col-sm-2">
-            UserIp:
-        </dt>
-        <dd class="col-sm-10">
-            @ViewBag.log.UserIp
-        </dd>
-        <dt class="col-sm-2">User LogIn Time:</dt>
-        <dd class="col-sm-10">
-            @ViewBag.log.UserLoginTime
-        </dd>
-        <dt class="col-sm-2">UserLocation:</dt>
-        <dd class="col-sm-10">
-            @ViewBag.log.Location
-        </dd>
-        <dt class="col-sm-2">UserID:</dt>
-        <dd class="col-sm-10">
-            @ViewBag.log.UserId
-        </dd>
-        
 
-    </dl>
-    }
+                </dl>
+            }
+        </div>
+        @foreach (var item in ViewBag.pts)
+        {
 
-</div>
-<div id="disqus_thread"></div>
+            <div class="card mb-3">
+                <div>
+                    <h6 class="card-header"><img src="~/Images/PersonImages/@item.User.Image" style="height:60px;width:60px;border-radius:50%;margin-right:4px" />@item.User.Name<br><span>@DateTime.Now.Subtract(item.CreatedDate).Minutes  <span>minuts ago</span></span></h6>
+
+                </div>
+                <div class="card-body">
+                    @if (!item.Title.Equals("notitle"))
+                    {
+                        <h5 class="card-title">@item.Title</h5>
+                    }
+                    <p class="card-text">@item.Description</p>
+                </div>
+                @if (!item.Images.Equals("noimage"))
+                {
+                    <img style="height: 200px; width: 99%; display: block; margin-bottom:3px" src="~/Images/PostImages/@item.Images" alt="Card image">
+                }
+                @if (!item.Video.Equals("novideo"))
+                {
+                    <video style="height: 200px; width: 99%; display: block; margin-bottom:3px" src="~/Videos/PostVideos/@item.Video" controls autoplay></video>
+                }
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Context.Session.GetString("name")))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary">Edit</a>
+                        <a class="btn btn-danger " data-toggle="modal" data-target="#exampleModal-@item.Id">Delete</a>
+                    }
+
+                    <a asp-area="PostArea" asp-controller="Posts" asp-action="Details" asp-route-id="@item.Id" class="btn btn-danger">Commint</a>
+                    <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample-@item.Id" aria-expanded="false" aria-controls="collapseExample-@item.Id">
+                        <span class="fa fa-share"></span>
+                    </a>
+                    <div class="collapse" id="collapseExample-@item.Id">
+                        <div class="card card-body">
+                            <div class="sharethis-inline-share-buttons"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            //Modal
+            <div class="modal" id="exampleModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Really want to delete...
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger delpost" id="delbutton" data-cid="@item.Id">ConfirmDelete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+    </section>
+
+
+
+
+
+
+
 @section Scripts
 {
-    <script>
-
-        /**
-        *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-        *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-
-        var disqus_config = function () {
-        this.page.url = @Context.Request.Host@Context.Request.Path;  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = @Model.Id; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-        };
-
-        (function () { // DON'T EDIT BELOW THIS LINE
-            var d = document, s = d.createElement('script');
-            s.src = 'https://kalyanainfo-azurewebsites-net.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-        })();
-       
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    
     <script>
 
         $(function () {
-           
+
             $("#PInfo").hide();
             $("#CInfo").hide();
             $("#LInfo").hide();
@@ -275,9 +351,72 @@
         $("#Ltinfo").click(function () {
             $("#LTInfo").toggle();
         });
+        $(function () {
+            $(".delpost").click(function () {
+
+                var dep = $(this);
+               
+                var depid = dep.data('cid');
+
+                $.ajax({
+                url: '/PostArea/Posts/DeletePost',
+                type: 'POST',
+                    data: {
+                        id: depid
+                },
+                success: function (returndata)
+                {
+                    if (returndata == "1")
+                    {
+                        $("#PostDiv").hide();
+                        $("#exampleModal-" + depid).modal('hide');
+                    } else
+                    {
+                        alert("Not Found");
+                    }
+                },
+                Error: function (er) {
+                    alert(er)
+                }
+            })
+            })
+        });
+        $(function () {
+
+            $("#delperson").click(function () {
+
+                $.ajax({
+                url: '/PeopleArea/People/DeletePerson',
+                type: 'POST',
+                data: {
+                    id:@Model.Id
+                },
+                success: function (returndata)
+                {
+                    if (returndata == "1")
+                    {
+                        $("#person").hide();
+                        $("#exampleModal-@Model.Id").modal('hide');
+                    }
+                    else
+                    {
+                        alert(returndata);
+                        alert("Not Found");
+                    }
+                },
+                Error: function (er) {
+                    alert(er)
+                }
+
+
+
+            })
+           });
+
+        });
+
 
     </script>
-
 
 
 

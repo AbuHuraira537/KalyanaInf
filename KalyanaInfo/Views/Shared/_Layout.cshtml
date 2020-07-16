@@ -9,9 +9,13 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=5eef379fb900a200126bbd16&product=inline-share-buttons" async="async"></script>
+    
+   
 </head>
-<body>
+<body style=" background: #7F7FD5;
+    background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
+    background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);">
     <!-- Load Facebook SDK for JavaScript -->
     <div id="fb-root"></div>
     <script>
@@ -47,77 +51,88 @@
         {
             @if (!((ho + cl).Contains("forgetpassword")))
             {
-            @if (!((ho + cl).Contains("login")))
-            {
-                <header>
-                    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-                        <div class="container">
-                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">KalyanaInfo</a>
-                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                                    aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
+                @if (!((ho + cl).Contains("login")))
+                {
+                    <header>
+                        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                            <div class="container">
+                                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">KalyanaInfo</a>
+                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                                        aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="navbar-toggler-icon"></span>
 
-                            </button>
-                            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                                @if (!(string.IsNullOrEmpty(Context.Session.GetString("mobile"))))
-                                {<ul class="navbar-nav flex-grow-1 float-lg-right">
-                                        <li><img id="output" width="60" height="60" style="border:1px solid black;border-radius:50%" src="~/Images/PersonImages/@Context.Session.GetString("img")" /></li>
-                                        <li class="nav-link text-dark">Name:@Context.Session.GetString("name")</li>
-                                    </ul>
-                                }
-                                else
-                                {
-                                    <ul class="navbar-nav flex-grow-1 float-lg-right">
-                                        <li class="nav-item">
-                                            <a class="nav-link text-dark" asp-area="PeopleArea" asp-controller="People" asp-action="Create">Register</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link text-dark" asp-area="PeopleArea" asp-controller="People" asp-action="LogIn">Login</a>
-                                        </li>
-                                    </ul>
-                                }
-                            <ul class="navbar-nav flex-grow-1">
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="PeopleArea" asp-controller="People" asp-action="Index">People</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="PostArea" asp-controller="Posts" asp-action="Index">Posts</a>
-                                </li>
-                            </ul>
-                                <div>
-                                    <form asp-area="PeopleArea" asp-controller="People" asp-action="Index" class="form-inline my-2 my-lg-0">
-                                        <div>
-                                            <input class="form-control form-inline mr-sm-2" type="text" placeholder="Search" id="query" name="query">
-                                            <select class="form-control" id="by" name="by">
-                                                <option value="Name">Name</option>
-                                                <option value="Address">Address</option>
-                                                <option value="Post">Post</option>
-                                                <option value="Contact">Contact</option>
-                                                <option value="Profession">Profession</option>
-                                                <option value="School">School</option>
-                                                <option value="Shope">Shope</option>
-                                                <option value="Video">Video</option>
+                                </button>
+                                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                                    @if (!(string.IsNullOrEmpty(Context.Session.GetString("mobile"))))
+                                    {<ul class="navbar-nav flex-grow-1 float-lg-right">
+                                            <li><img width="60" height="60" style="border:1px solid black;border-radius:50%" src="~/Images/PersonImages/@Context.Session.GetString("img")" /></li>
+                                            <li class="nav-link text-dark">Name:@Context.Session.GetString("name")</li>
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <ul class="navbar-nav flex-grow-1 float-lg-right">
+                                            <li class="nav-item">
+                                                <a class="nav-link text-dark" asp-area="PeopleArea" asp-controller="People" asp-action="Create">Register</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link text-dark" asp-area="PeopleArea" asp-controller="People" asp-action="LogIn">Login</a>
+                                            </li>
+
+                                        </ul>
+                                    }
+
+                                <ul class="navbar-nav flex-grow-1">
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="PeopleArea" asp-controller="People" asp-action="Index">People</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="PostArea" asp-controller="Posts" asp-action="Index">Posts</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="ShopeArea" asp-controller="Shopes" asp-action="Index">Shopes</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" id="chat">Chat</a>
+                                    </li>
+
+                                </ul>
+                                    <div>
+                                        <form asp-area="PeopleArea" asp-controller="People" asp-action="Index" class="form-inline my-2 my-lg-0">
+                                            <div>
+                                                <input class="form-control form-inline mr-sm-2" type="text" placeholder="Search" id="query" name="query">
+                                                <select class="form-control" id="by" name="by">
+                                                    <option value="Name">Name</option>
+                                                    <option value="Address">Address</option>
+                                                    <option value="Post">Post</option>
+                                                    <option value="Contact">Contact</option>
+                                                    <option value="Profession">Profession</option>
+                                                    <option value="School">School</option>
+                                                    <option value="Shope">Shope</option>
+                                                    <option value="Video">Video</option>
 
 
-                                            </select>
-                                            <button class="btn btn-secondary my-2 my-sm-0" type="submit"><span class="fa fa-search"></span></button>
-                                        </div>
-                                    </form>
+                                                </select>
+                                                <button class="btn btn-secondary my-2 my-sm-0" type="submit"><span class="fa fa-search"></span></button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </nav>
-                </header>
-            }
+                        </nav>
+                    </header>
+
+                }
             }
         }
-        }
+    }
     <div class="container" style="max-width:1340px">
         <main role="main" class="pb-3">
             <div class="row">
@@ -141,14 +156,30 @@
                 <div class="col-md-8">
                     @RenderBody()
                 </div>
-                @if (!((ho + cl).Contains("login")))
-                { 
-                    <div class="col-md-2">
-                        @await Html.PartialAsync("_DashBoard")
-                    </div>
+                @if (!((ho + cl).Contains("people/create")))
+                {
+                    @if (!((ho + cl).Contains("login")))
+                    {
+                        <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse ">
+                            @await Html.PartialAsync("_Advertise")
+                        </div>
+                    }
+                }
+                @if (!((ho + cl).Contains("people/create")))
+                {
+
+                    @if (!((ho + cl).Contains("login")))
+                    {
+                        @if (!(string.IsNullOrEmpty(Context.Session.GetString("name"))))
+                        {
+                            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse ">
+                                @await Html.PartialAsync("_Advertise")
+                            </div>
+                        }
+                    }
                 }
             </div>
-</main>
+        </main>
     </div>
 
     <footer class="border-top footer text-muted">
@@ -163,8 +194,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    
 
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        $("#chat").click(function () {
+            window.location="http://kanversation.azurewebsites.net";
+        });
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

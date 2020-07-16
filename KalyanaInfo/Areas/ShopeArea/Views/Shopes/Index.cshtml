@@ -1,0 +1,47 @@
+﻿@model IEnumerable<KalyanaInfo.Models.Shope>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>  @if (Model != null)
+{
+
+    @foreach (var item in Model.Reverse())
+    {
+
+        <div class="col-md-5 m-2 d-inline-block">
+
+            <div class="card border-primary  d-inline-block col-md-6 " style="max-width: 30rem;">
+                <a asp-action="Details" asp-route-id="@item.Id">
+                    <div class="card-header">
+                        <span>
+                            @{
+                                var list=@item.Images.Split(",");
+                            }
+                            <img src="~/Images/ShopeImages/@list[0]" alt="No Image" class="img-thumbnail" style="border-radius:100%;border:1px solid gray;display:inline-block" width="100" height="100" />
+                        </span>
+                        <span>@Html.DisplayFor(modelItem => item.Name)</span>
+                       
+                    </div>
+                    <div class="card-body">
+                        <p>About: @Html.DisplayFor(modelItem => item.ShortDescription)</p>
+                    </div>
+                </a>
+                <div>
+
+                    <a asp-action="Details" class="btn btn-info" asp-route-id="@item.Id">Details</a>
+
+                </div>
+            </div>
+        </div>
+
+
+
+    }
+
+}

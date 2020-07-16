@@ -4,7 +4,9 @@
 <div class="login-page">
     <div class="form">
         <h3>SignIn in Kalyana</h3>
+        <p>@ViewBag.er</p>
           <form class="login-form" asp-action="LogIn" method="post">
+              @ViewBag.nf
             <input type="text" placeholder="Mobile number" name="mob" id="mob" />
             <input type="password" placeholder="password" name="pass" id="pass" />
             <input type="submit" value="login" class="btn btn-info" id="sub" style="background-color:olivedrab"  />

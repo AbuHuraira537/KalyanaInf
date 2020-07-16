@@ -24,10 +24,11 @@ namespace KalyanaInfo.Areas.PostArea.Controllers
         }
 
         // GET: PostArea/Posts
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var kalyanadiaryContext = _context.Post.Include(p => p.User);
-            return View(await kalyanadiaryContext.ToListAsync());
+            
+            return View(kalyanadiaryContext.ToList());
         }
 
         // GET: PostArea/Posts/Details/5
@@ -88,8 +89,6 @@ namespace KalyanaInfo.Areas.PostArea.Controllers
                 post.Video = VideoName;
                  FileStream stream = new FileStream(FinalFileName, FileMode.Create);
                 await video.CopyToAsync(stream);
-
-
             }
             else
             {
@@ -99,10 +98,9 @@ namespace KalyanaInfo.Areas.PostArea.Controllers
             {
                 post.Title = "notitle";
             }
-
             post.CreatedDate = DateTime.Now;
             post.ModifiedDate = DateTime.Now;
-            post.PostType = "public";
+            post.PostType = "Public";
             if (post.Description == null)
             {
                 ModelState.AddModelError("", "Description cant be null");
@@ -142,13 +140,44 @@ namespace KalyanaInfo.Areas.PostArea.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Images,CreatedDate,ModifiedDate,PostType,Video,UserId")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,CreatedDate,Images,Video,UserId")] Post post, IFormFile image, IFormFile video)
         {
             if (id != post.Id)
             {
                 return NotFound();
             }
+            post.ModifiedDate = DateTime.Now;
+            post.PostType = "Public";
+            if (image != null)
+            {
+                string DirPath = _ENV.ContentRootPath + "\\wwwroot\\Images\\PostImages\\";
+                string FileEx = Path.GetExtension(image.FileName);
+                string fn = Guid.NewGuid() + FileEx;
+                string FinalFileName = DirPath + fn;
+                post.Images = fn;
+                FileStream stream = new FileStream(FinalFileName, FileMode.Create);
+                await image.CopyToAsync(stream);
+            }
+            if (video != null)
+            {
+                string DirPath = _ENV.ContentRootPath + "\\wwwroot\\Videos\\PostVideos\\";
+                string FileEx = Path.GetExtension(video.FileName);
+                string VideoName = Guid.NewGuid() + FileEx;
+                string FinalFileName = DirPath + VideoName;
+                post.Video = VideoName;
+                FileStream stream = new FileStream(FinalFileName, FileMode.Create);
+                await video.CopyToAsync(stream);
+            }
+            if (post.Title == null)
+            {
+                post.Title = "notitle";
+            }
 
+            if (post.Description == null)
+            {
+                ModelState.AddModelError("", "Description cant be null");
+                return View(post);
+            }
             if (ModelState.IsValid)
             {
                 try
@@ -207,5 +236,41 @@ namespace KalyanaInfo.Areas.PostArea.Controllers
         {
             return _context.Post.Any(e => e.Id == id);
         }
+        public string DeletePost(int id)
+        {
+            try
+            {
+                var post = _context.Post.Find(id);
+                Post p = post;
+                if (p != null)
+                {
+                    _context.Remove(p);
+                    _context.SaveChanges();
+                    return "1";
+                }
+                return "0";
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+        }
+        public async Task<IActionResult> MyPosts(int id)
+        {
+            if(HttpContext.Session.GetInt32("id")==id)
+            {
+                
+                return View(await _context.Post.Where(posts => posts.UserId == id).Include(p=>p.User).ToListAsync());
+            }
+
+
+            return View();
+
+
+        }
+
+
+
+
     }
 }

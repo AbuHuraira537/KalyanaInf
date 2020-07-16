@@ -33,23 +33,42 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
         // GET: PeopleArea/People
         public async Task<IActionResult> Index(string query,string By)
         {
-
-            if (query != null)
+           
+            if (By!=null&&query!=null)
             {
-                ViewBag.b = By;
+                if(By.Contains("Name"))
+                {
+                   var kalyanadiaryContext = _context.Person.Include(p => p.EducationNavigation).Include(p => p.FamilyNavigation).Include(p => p.GenderNavigation).Include(p => p.HasMobileNavigation).Include(p => p.ProfessionNavigation).Include(p => p.VehicleNavigation).Where(p => p.Name.Contains(query));
+                    return View(await kalyanadiaryContext.ToListAsync());
 
-                var kalyanadiaryContext = _context.Person.Include(p => p.EducationNavigation).Include(p => p.FamilyNavigation).Include(p => p.GenderNavigation).Include(p => p.HasMobileNavigation).Include(p => p.ProfessionNavigation).Include(p => p.VehicleNavigation).Where(p=>p.Name.Contains(query));
-                return View(await kalyanadiaryContext.ToListAsync());
-                
-            }
-            else
-            { 
-
-            var kalyanadiaryContext = _context.Person.Include(p => p.EducationNavigation).Include(p => p.FamilyNavigation).Include(p => p.GenderNavigation).Include(p => p.HasMobileNavigation).Include(p => p.ProfessionNavigation).Include(p => p.VehicleNavigation);
-            return View(await kalyanadiaryContext.ToListAsync());
-            }
+                }
+                else if (By.Contains("Address"))
+                {
+                    var kalyanadiaryContext = _context.Person.Include(p => p.EducationNavigation).Include(p => p.FamilyNavigation).Include(p => p.GenderNavigation).Include(p => p.HasMobileNavigation).Include(p => p.ProfessionNavigation).Include(p => p.VehicleNavigation).Where(p => p.Address.Contains(query));
+                    return View(await kalyanadiaryContext.ToListAsync());
+                }
+                 
+                else if (By.Contains("Contact"))
+                {
+                    var kalyanadiaryContext = _context.Person.Include(p => p.EducationNavigation).Include(p => p.FamilyNavigation).Include(p => p.GenderNavigation).Include(p => p.HasMobileNavigation).Include(p => p.ProfessionNavigation).Include(p => p.VehicleNavigation).Where(p => p.Mobile.Contains(query));
+                    return View(await kalyanadiaryContext.ToListAsync());
+                }
+                else if (By.Contains("Profession"))
+                {
+                    var kalyanadiaryContext = _context.Profession.Where(p=>p.Name.Contains(query));
+                    return View(await kalyanadiaryContext.ToListAsync());
+                }
+             
+            }            
+            var kalyanadiaryContex = _context.Person.Include(p => p.EducationNavigation).Include(p => p.FamilyNavigation).Include(p => p.GenderNavigation).Include(p => p.HasMobileNavigation).Include(p => p.ProfessionNavigation).Include(p => p.VehicleNavigation);               
+                return View(await kalyanadiaryContex.ToListAsync());
+          
         }
-
+       public List<Person> GetPeople()
+        {
+            return _context.Person.ToList();
+            
+        }
         // GET: PeopleArea/People/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -68,6 +87,8 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             var logs = await _context.UserLog.Where(a=>a.UserId==id).FirstOrDefaultAsync();
             ViewBag.log = logs;
+            var posts =await _context.Post.Where(p => p.UserId == id).ToListAsync();
+            ViewBag.pts = posts;
             if (person == null)
             {
                 return NotFound();
@@ -96,7 +117,7 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Email,Password,SonOrDaughterOf,Address,Hobby,Mobile,DateOfBirth,HasMobile,Gender,Education,Profession,Vehicle,Family,About,Married,IdCardOrBForm")] Person person,IFormFile image)
+        public async Task<IActionResult> Create([Bind("Name,Email,Password,SonOrDaughterOf,Address,Hobby,Mobile,DateOfBirth,HasMobile,Gender,Education,Profession,Vehicle,Family,About,Married,RecoverEmail,Private")] Person person,IFormFile image)
         {
             string res = "";
             if (image!=null)
@@ -111,9 +132,9 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
                 FileStream stream = new FileStream(FinalFileName, FileMode.Create);
                await image.CopyToAsync(stream);
             }
-            if (person.IdCardOrBForm == null)
+            if (person.RecoveryEmail == null)
             {
-                person.IdCardOrBForm = "Not Provided";
+                person.RecoveryEmail = "Not Provided";
             }
             if (ModelState.IsValid)
             {
@@ -187,7 +208,7 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Password,SonOrDaughterOf,Address,Hobby,Mobile,DateOfBirth,HasMobile,Gender,Education,Profession,Vehicle,Family,About,Married,CreatedDate,ModifiedDate,City,Image")] Person person,IFormFile image)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Password,SonOrDaughterOf,Address,Hobby,Mobile,DateOfBirth,HasMobile,Gender,RecoveryEmail,Education,Profession,Vehicle,Family,About,Married,CreatedDate,ModifiedDate,City,Image,Private")] Person person,IFormFile image)
         {
             if (id != person.Id)
             {
@@ -214,8 +235,12 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
                 }
                 try
                 {
+                    if(string.IsNullOrEmpty(person.RecoveryEmail))
+                    {
+                        person.RecoveryEmail = "3640212345678";
+                    }
                     person.ModifiedDate = DateTime.Now;
-                    person.IdCardOrBForm = "3640212345678";
+                    
                     person.City = "Kalyana";
                     _context.Update(person);
                     await _context.SaveChangesAsync();
@@ -271,6 +296,43 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+
+
+            //belongings of persons are detleted casecading through code
+            var logs= _context.UserLog.Where(user => user.UserId == id);
+            if(logs!=null)
+            { 
+            _context.RemoveRange(await logs.ToListAsync());
+            }
+            var mosq = _context.Mosque.Where(mos => mos.UserId == id);
+            if(mosq!=null)
+            {
+                _context.RemoveRange(await mosq.ToListAsync());
+            }
+            var posts = _context.Post.Where(pos => pos.UserId == id);
+            if(posts!=null)
+            {
+                 _context.RemoveRange(await posts.ToListAsync());
+            }
+            var video = _context.Video.Where(vid => vid.UserId == id);
+            if(video!=null)
+            {
+                _context.RemoveRange(await video.ToListAsync());
+            }
+            var shopes = _context.Shope.Where(shop => shop.UserId == id);
+            if(shopes!=null)
+            {
+                _context.RemoveRange(await shopes.ToListAsync());
+            }
+            var schls = _context.School.Where(sl => sl.UserId == id);
+            if(schls!=null)
+            {
+                _context.RemoveRange(await schls.ToListAsync());
+            }
+             await _context.SaveChangesAsync();
+            //session clear
+            HttpContext.Session.Clear();
+            //then delete person
             var person = await _context.Person.FindAsync(id);
             _context.Person.Remove(person);
             await _context.SaveChangesAsync();
@@ -284,7 +346,18 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
 
         public async Task<IActionResult> LogIn(string mob,string pass)
         {
+            Administrator administrator = new Administrator();
+            if(administrator.Login(mob,pass))
+            {
+                HttpContext.Session.SetString("mobile",administrator.Key);
+                HttpContext.Session.SetString("name", administrator.Name);
+                HttpContext.Session.SetString("img", "noimage");
+                HttpContext.Session.SetInt32("id",-90);
+                return RedirectToAction("Index", "People", new { query = "", by = "" });
+            }
+            
             Person p = await _context.Person.Where(a => a.Mobile == mob && a.Password == pass).FirstOrDefaultAsync();
+            
             if(p!=null)
             {
                 HttpContext.Session.SetString("mobile",p.Mobile);
@@ -316,10 +389,11 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
               
                 return RedirectToAction("Index","People",new { query ="",by=""});
             }
-            
-            
-            return View(p);
+            else {
 
+                ViewBag.nf = "Invalid Mobile or Password";
+            return View(p);
+            }
         }
         public IActionResult Logout()
         {
@@ -336,7 +410,7 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
         [ValidateAntiForgeryToken]
         public async  Task<IActionResult> ForgetPassword(string mob,string email)
         {
-            Person p = await _context.Person.Where(p => p.Mobile == mob && p.IdCardOrBForm == email).FirstOrDefaultAsync();
+            Person p = await _context.Person.Where(p => p.Mobile == mob && p.RecoveryEmail == email).FirstOrDefaultAsync();
             if(p!=null)
             {
                 try
@@ -372,7 +446,60 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
             ViewBag.er = "Recovery Email or Mobile is invalid";
             return View();
         }
+        public async Task<string> DeletePerson(int id)
+        {
 
-
+            try
+            {
+                var post = _context.Person.Find(id);
+                Person p = post;
+                if (p != null)
+                {
+                    //belongings of persons are detleted casecading through code
+                    var logs = _context.UserLog.Where(user => user.UserId == id);
+                    if (logs != null)
+                    {
+                        _context.RemoveRange(await logs.ToListAsync());
+                    }
+                    var mosq = _context.Mosque.Where(mos => mos.UserId == id);
+                    if (mosq != null)
+                    {
+                        _context.RemoveRange(await mosq.ToListAsync());
+                    }
+                    var posts = _context.Post.Where(pos => pos.UserId == id);
+                    if (posts != null)
+                    {
+                        _context.RemoveRange(await posts.ToListAsync());
+                    }
+                    var video = _context.Video.Where(vid => vid.UserId == id);
+                    if (video != null)
+                    {
+                        _context.RemoveRange(await video.ToListAsync());
+                    }
+                    var shopes = _context.Shope.Where(shop => shop.UserId == id);
+                    if (shopes != null)
+                    {
+                        _context.RemoveRange(await shopes.ToListAsync());
+                    }
+                    var schls = _context.School.Where(sl => sl.UserId == id);
+                    if (schls != null)
+                    {
+                        _context.RemoveRange(await schls.ToListAsync());
+                    }
+                    await _context.SaveChangesAsync();
+                    //session clear
+                    HttpContext.Session.Clear();
+                    //then delete person
+                    _context.Remove(p);
+                    _context.SaveChanges();
+                    return "1";
+                }
+                return "0";
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+        }
     }
 }

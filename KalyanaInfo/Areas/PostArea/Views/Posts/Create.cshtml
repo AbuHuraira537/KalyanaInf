@@ -35,7 +35,7 @@
                 <p><input id="video" name="video" type="file" accept="video/*" onchange="loadFileVideo(event)" style="display: none;"></p>
                 <p><label for="video" style="cursor: pointer;">UploadVideo(*Optional)</label></p>
                 <p style="margin-left:auto;margin-right:auto" id="v">
-                    <video id="output1"  style="border:1px solid black;width:100vh;height:50vh" controls>
+                    <video id="output1"  style="height: 200px; width: 99%; display: block;" controls>
                         this tag is not available in your browser
                     </video>
                 </p>
@@ -65,15 +65,15 @@
     });
     
     var loadFile = function (event) {
-        var image = document.getElementById('output');
-        image.src = URL.createObjectURL(event.target.files[0]);
-        $("#i").fadeIn(); 
-
+        $("#i").fadeIn();
+        $("#output").attr("src", URL.createObjectURL(event.target.files[0]))
+              
     };
     var loadFileVideo = function (event) {
+        $("#v").fadeIn();
         var video = document.getElementById('output1');
         video.src = URL.createObjectURL(event.target.files[0]);
-        $("#v").fadeIn();
+       
     };
 
 </script>

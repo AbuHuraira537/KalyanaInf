@@ -13,6 +13,10 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Images" />
+            <input type="hidden" asp-for="Video" />
+            <input type="hidden" asp-for="UserId" />
+            <input asp-for="CreatedDate" type="hidden" class="form-control" />
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
@@ -23,36 +27,26 @@
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Images" class="control-label"></label>
-                <input asp-for="Images" class="form-control" />
+                <p><input id="image" name="image" type="file" accept="image/*" onchange="loadFile(event)" style="display:none;"></p>
+                <p><label for="image" style="cursor: pointer;">UploadImage (*optional)</label></p>
+                <p id="i"><img id="output" width="150" height="150" style="border:1px solid black;border-radius:50%" /></p>
                 <span asp-validation-for="Images" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
+                <p><input id="video" name="video" type="file" accept="video/*" onchange="loadFileVideo(event)" style="display: none;"></p>
+                <p><label for="video" style="cursor: pointer;">UploadVideo(*Optional)</label></p>
+                <p style="margin-left:auto;margin-right:auto" id="v">
+                    <video id="output1" style="height: 200px; width: 99%; display: block;" controls>
+                        this tag is not available in your browser
+                    </video>
+                </p>
+                <span asp-validation-for="Images" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ModifiedDate" class="control-label"></label>
-                <input asp-for="ModifiedDate" class="form-control" />
-                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PostType" class="control-label"></label>
-                <input asp-for="PostType" class="form-control" />
-                <span asp-validation-for="PostType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Video" class="control-label"></label>
-                <input asp-for="Video" class="form-control" />
-                <span asp-validation-for="Video" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
+
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -64,3 +58,27 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+@section Scripts
+{
+
+    <script>
+        $(function () {
+            $("#i").fadeOut();
+            $("#v").fadeOut();
+        });
+
+        var loadFile = function (event) {
+            $("#i").fadeIn();
+            $("#output").attr("src", URL.createObjectURL(event.target.files[0]))
+
+        };
+        var loadFileVideo = function (event) {
+            $("#v").fadeIn();
+            var video = document.getElementById('output1');
+            video.src = URL.createObjectURL(event.target.files[0]);
+
+        };
+
+    </script>
+
+}

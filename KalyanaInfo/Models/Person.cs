@@ -7,11 +7,14 @@ namespace KalyanaInfo.Models
     {
         public Person()
         {
+            MessageMessageFromNavigation = new HashSet<Message>();
+            MessageMessageToNavigation = new HashSet<Message>();
             Mosque = new HashSet<Mosque>();
             Post = new HashSet<Post>();
             School = new HashSet<School>();
             Shope = new HashSet<Shope>();
             Video = new HashSet<Video>();
+           
         }
 
         public int Id { get; set; }
@@ -24,7 +27,6 @@ namespace KalyanaInfo.Models
         public string Address { get; set; }
         public string Hobby { get; set; }
         public string Mobile { get; set; }
-        public string IdCardOrBForm { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
         public DateTime DateOfBirth { get; set; }
@@ -36,6 +38,8 @@ namespace KalyanaInfo.Models
         public int Family { get; set; }
         public string About { get; set; }
         public string Married { get; set; }
+        public string RecoveryEmail { get; set; }
+        public string Private { get; set; }
 
         public virtual Education EducationNavigation { get; set; }
         public virtual Family FamilyNavigation { get; set; }
@@ -48,5 +52,8 @@ namespace KalyanaInfo.Models
         public virtual ICollection<School> School { get; set; }
         public virtual ICollection<Shope> Shope { get; set; }
         public virtual ICollection<Video> Video { get; set; }
+      
+        public HashSet<Message> MessageMessageFromNavigation { get; }
+        public HashSet<Message> MessageMessageToNavigation { get; }
     }
 }

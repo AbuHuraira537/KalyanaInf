@@ -5,16 +5,27 @@
 }
 
 <h1>Post</h1>
+@if (!string.IsNullOrEmpty(Context.Session.GetString("name")))
+{
+    <p>
+        <a asp-action="Create">
+            <div class="text-center">
+                <img src="~/Images/PersonImages/@Context.Session.GetString("img")" style="height:60px;width:60px;border-radius:50%;margin-right:8px" />
+                <input type="text" disabled placeholder="Whats in your mind" style="border-radius:20px" />
+            </div>
+        </a>
+    </p>
+}
 
-<div class="card mb-3">
+<div class="card mb-3" id="PostDiv">
     <div>
-        <h3 class="card-header"><img src="~/Images/PersonImages/@Model.User.Image" style="height:60px;width:60px;border-radius:50%;margin-right:4px" />@Html.DisplayFor(model => model.User.Name)<span>@Model.CreatedDate</span></h3>
+        <h6 class="card-header"><img src="~/Images/PersonImages/@Model.User.Image" style="height:60px;width:60px;border-radius:50%;margin-right:4px" />@Html.DisplayFor(model => model.User.Name)<br><span>@Model.User.Name<br></span><span>@DateTime.Now.Subtract(Model.CreatedDate).Days :@DateTime.Now.Subtract(Model.CreatedDate).Hours :@DateTime.Now.Subtract(Model.CreatedDate).Minutes   <span>minuts ago</span></span></h6>
 
     </div>
     <div class="card-body">
-        @if (!Model.Title.Equals("notitle"))
+        @if (!(string.IsNullOrEmpty(Model.Title) || Model.Title.Equals("notitle")))
         {
-            <h5 class="card-title">@Model.Title</h5>
+            <p class="card-text"><b>@Model.Title</b></p>
         }
         <p class="card-text">@Model.Description</p>
     </div>
@@ -22,20 +33,52 @@
     {
         <img style="height: 200px; width: 99%; display: block;" src="~/Images/PostImages/@Model.Images" alt="Card image">
     }
-    @if (!Model.Video.Equals("video"))
+    @if (!Model.Video.Equals("novideo"))
     {
-        <video style="height: 200px; width: 99%; display: block;" src="@Model.Video" controls autoplay></video>
+        <video style="height: 200px; width: 99%; display: block;" src="~/Videos/PostVideos/@Model.Video" controls autoplay></video>
     }
     <div class="card-body">
-        @if (!string.IsNullOrEmpty(Context.Session.GetString("name")))
+        @if ((Context.Session.GetInt32("id")) == Model.UserId)
         {
             <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-secondary">Edit</a>
-            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+            <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModal-@Model.Id">Delete</a>
         }
         <a asp-action="Index" class="btn btn-secondary">Back</a>
-        <a asp-action="Index" class="btn btn-secondary"><span class="fa fa-share"></span></a>
+
+        <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            <span class="fa fa-share"></span>
+        </a>
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+                <div class="sharethis-inline-share-buttons"></div>
+            </div>
+        </div>
+
+
     </div>
 
+</div>
+
+<!-- Button trigger modal -->
+<!-- Modal -->
+<div class="modal" id="exampleModal-@Model.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="delbutton">Save changes</button>
+            </div>
+        </div>
+    </div>
 </div>
 <div id="disqus_thread"></div>
 @section Scripts
@@ -58,11 +101,44 @@
             s.setAttribute('data-timestamp', +new Date());
             (d.head || d.body).appendChild(s);
         })();
-
     </script>
     <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <script>
+        $(function () {
+
+            $("#delbutton").click(function () {
+
+                $.ajax({
+                url: '/PostArea/Posts/DeletePost',
+                type: 'POST',
+                data: {
+                    id:@Model.Id
+                },
+                success: function (returndata)
+                {
+                    if (returndata == "1")
+                    {
+                        $("#PostDiv").hide();
+
+                        $("#exampleModal-@Model.Id").modal('hide');
+                    } else
+                    {
+                        alert("Not Found");
+                    }
+                },
+                Error: function (er) {
+                    alert(er)
+                }
 
 
+
+            })
+           });
+
+        });
+
+
+    </script>
 
 
 }

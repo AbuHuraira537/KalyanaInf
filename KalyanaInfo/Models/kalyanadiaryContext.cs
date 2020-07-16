@@ -19,6 +19,9 @@ namespace KalyanaInfo.Models
         public virtual DbSet<Family> Family { get; set; }
         public virtual DbSet<Fiqqah> Fiqqah { get; set; }
         public virtual DbSet<Gender> Gender { get; set; }
+
+        public virtual DbSet<Message> Message { get; set; }
+
         public virtual DbSet<Mobile> Mobile { get; set; }
         public virtual DbSet<Mosque> Mosque { get; set; }
         public virtual DbSet<Person> Person { get; set; }
@@ -217,11 +220,7 @@ namespace KalyanaInfo.Models
                     .HasColumnName("hobby")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.IdCardOrBForm)
-                    .IsRequired()
-                    .HasColumnName("id_card_or_b_form")
-                    .HasMaxLength(20);
-
+                
                 entity.Property(e => e.Image)
                     .IsRequired()
                     .HasColumnName("image")
@@ -257,6 +256,12 @@ namespace KalyanaInfo.Models
                     .IsRequired()
                     .HasColumnName("son_or_daughter_of")
                     .HasMaxLength(50);
+                entity.Property(e => e.RecoveryEmail)
+                   .HasColumnName("recovery_email")
+                   .HasMaxLength(50);
+                entity.Property(e => e.Private)
+                   .HasColumnName("private")
+                   .HasMaxLength(10);
 
                 entity.Property(e => e.Vehicle).HasColumnName("vehicle");
 
@@ -572,6 +577,43 @@ namespace KalyanaInfo.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_video_person");
             });
+            modelBuilder.Entity<Message>(entity =>
+            {
+                entity.ToTable("message");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.DateTime)
+                    .HasColumnName("date_time")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Image)
+                    .HasColumnName("image")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.MessageFrom).HasColumnName("message_from");
+
+                entity.Property(e => e.MessageTo).HasColumnName("message_to");
+
+                entity.Property(e => e.Text).HasColumnName("text");
+
+                entity.Property(e => e.Video)
+                    .HasColumnName("video")
+                    .HasMaxLength(50);
+
+                entity.HasOne(d => d.MessageFromNavigation)
+                    .WithMany(p => p.MessageMessageFromNavigation)
+                    .HasForeignKey(d => d.MessageFrom)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_message_person");
+
+                entity.HasOne(d => d.MessageToNavigation)
+                    .WithMany(p => p.MessageMessageToNavigation)
+                    .HasForeignKey(d => d.MessageTo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_message_person1");
+            });
+
 
             OnModelCreatingPartial(modelBuilder);
         }

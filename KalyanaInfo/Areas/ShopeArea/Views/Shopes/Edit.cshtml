@@ -1,0 +1,89 @@
+﻿@model KalyanaInfo.Models.Shope
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Shope</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Images" />
+            <div class="form-group">
+                <p><input id="images" name="images" type="file" accept="image/*" style="display:none" multiple></p>
+                <p><label for="images" style="cursor: pointer;">Upload Images</label></p>
+                <span asp-validation-for="Images" class="text-danger"></span>
+            </div>
+            <div class="row" id="a-0">
+
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShortDescription" class="control-label"></label>
+                <input asp-for="ShortDescription" class="form-control" />
+                <span asp-validation-for="ShortDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LongDescription" class="control-label"></label>
+                <input asp-for="LongDescription" class="form-control" />
+                <span asp-validation-for="LongDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShopeType" class="control-label"></label>
+                <select asp-for="ShopeType" class="form-control" asp-items="ViewBag.ShopeType"></select>
+                <span asp-validation-for="ShopeType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="hidden" value="@Context.Session.GetInt32("id")" asp-for="UserId" />
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts
+{
+<script>
+
+    $('input#images').change(function () {
+        var files = $(this)[0].files;
+        if (files.length > 10) {
+            alert("you can select max 10 files.");
+        }
+        else {
+            $("#a-0").html("");
+            for (var i = 0; i < files.length; i++) {
+                $('<div class="col-md-4"><div class="thumbnail"><img src="' + URL.createObjectURL(event.target.files[i]) + '" alt="Lights" style="width:100%"></div></div>').appendTo("#a-0");
+            }
+        }
+    });
+
+
+</script>
+
+
+
+
+}

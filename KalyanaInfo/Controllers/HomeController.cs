@@ -6,21 +6,25 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using KalyanaInfo.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace KalyanaInfo.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly kalyanadiaryContext _context;
+        public HomeController(ILogger<HomeController> logger,kalyanadiaryContext con)
         {
             _logger = logger;
+            _context = con;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var kalyanadiaryContext = _context.Post.Include(p => p.User);
+
+            return View(kalyanadiaryContext.ToList());
         }
 
         public IActionResult Privacy()

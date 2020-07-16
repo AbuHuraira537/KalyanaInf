@@ -1,8 +1,60 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<KalyanaInfo.Models.Post>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@{
+    ViewData["Title"] = "Index";
+}
+@if (string.IsNullOrEmpty(Context.Session.GetString("name")))
+{
+    <p>create Account to posts <a asp-area="PeopleArea" asp-controller="People" asp-action="Create" class="btn btn-success">Create</a></p>
+}
+@if (!string.IsNullOrEmpty(Context.Session.GetString("name")))
+{
+    <p>
+        <a asp-action="Create">
+            <div class="text-center">
+                <img src="~/Images/PersonImages/@Context.Session.GetString("img")" style="height:60px;width:60px;border-radius:50%;margin-right:8px" />
+                <input type="text" disabled placeholder="Whats in your mind" style="border-radius:20px" />
+            </div>
+        </a>
+    </p>
+}
+@if (Model != null)
+{
+    @foreach (var item in Model.Reverse())
+    {
+
+        <div class="card mb-3">
+            <div>
+                <h6 class="card-header"><img src="~/Images/PersonImages/@item.User.Image" style="height:60px;width:60px;border-radius:50%;margin-right:4px" />@item.User.Name<br><span>@DateTime.Now.Subtract(item.CreatedDate).Days :@DateTime.Now.Subtract(item.CreatedDate).Hours :@DateTime.Now.Subtract(item.CreatedDate).Minutes  <span>minuts ago</span></span></h6>
+
+            </div>
+            <div class="card-body">
+                @if (!item.Title.Equals("notitle"))
+                {
+                    <h5 class="card-title">@item.Title</h5>
+                }
+                <p class="card-text">@item.Description</p>
+            </div>
+            @if (!item.Images.Equals("noimage"))
+            {
+                <img style="height: 200px; width: 99%; display: block; margin-bottom:3px" src="~/Images/PostImages/@item.Images" alt="Card image">
+            }
+            @if (!item.Video.Equals("novideo"))
+            {
+                <video style="height: 200px; width: 99%; display: block; margin-bottom:3px" src="~/Videos/PostVideos/@item.Video" controls autoplay></video>
+            }
+            <div class="card-body">
+                <a  asp-area="PostArea" asp-action="Details" asp-route-id="@item.Id" class="btn btn-danger">Commint</a>
+                <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample-@item.Id" aria-expanded="false" aria-controls="collapseExample-@item.Id">
+                    <span class="fa fa-share"></span>
+                </a>
+                <div class="collapse" id="collapseExample-@item.Id">
+                    <div class="card card-body">
+                        <div class="sharethis-inline-share-buttons"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+}

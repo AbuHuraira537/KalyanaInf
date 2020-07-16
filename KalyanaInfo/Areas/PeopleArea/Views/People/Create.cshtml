@@ -7,17 +7,16 @@
 
 <h1>Signup For Kalyana</h1>
 
-<h4>Person of Kalyana</h4>
-<hr />
-<div class="row align-content-center">
-    <div class="col-md-4">
+
+<div class="row align-content-center" style="background-color:lightblue">
+    <div class="col-md-6">
         <form asp-action="Create" id="PersonForm" name="PersonForm" enctype="multipart/form-data">
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <p><input id="image" name="image" type="file" accept="image/*" onchange="loadFile(event)" style="display: none;" required></p>
                 <p><label for="image" style="cursor: pointer;">Upload Image</label></p>
-                <p><img id="output" width="60" height="60" style="border:1px solid black;border-radius:50%" /></p>
+                <p id="#img"><img id="output" width="60" height="60" style="border:1px solid black;border-radius:50%" /></p>
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -57,7 +56,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="DateOfBirth" class="control-label"></label>
-                <input asp-for="DateOfBirth" class="form-control" required />
+                <input asp-for="DateOfBirth" class="form-control"  />
                 <span asp-validation-for="DateOfBirth" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -91,18 +90,29 @@
             </div>
 
             <div class="form-group">
-                <label for="IdCardOrBForm" class="control-label ">Recovery Email(Optional)</label>
-                <textarea asp-for="IdCardOrBForm" class="form-control" ></textarea>
-                <span asp-validation-for="IdCardOrBForm" class="text-danger"></span>
+                <label for="RecoveryEmail" class="control-label ">Recovery Email(*Optional)</label>
+                <input asp-for="RecoveryEmail" class="form-control" type="email" />
+                <span asp-validation-for="RecoveryEmail" class="text-danger"></span>
             </div>
-            
+
             <div class="form-group">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                     <label class="btn btn-secondary active" style="margin-right:10px">
-                        <input type="radio" asp-for="Married" autocomplete="off" checked value="false"> Married:
+                        <input type="radio" asp-for="Married" autocomplete="off" checked value="true"> Married:
                     </label>
                     <label class="btn btn-secondary">
-                        <input type="radio" asp-for="Married" autocomplete="off" value="true"> Not Married:
+                        <input type="radio" asp-for="Married" autocomplete="off" value="false"> Not Married:
+                    </label>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-secondary active" style="margin-right:10px">
+                        <input type="radio" asp-for="Private" autocomplete="off" checked value="true"> Private
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" asp-for="Private" autocomplete="off" value="false"> Public
                     </label>
 
                 </div>
@@ -122,7 +132,9 @@
 @section Scripts
 {
     <script>
+      
         var loadFile = function (event) {
+            $("#img").fadeIn();
             var image = document.getElementById('output');
             image.src = URL.createObjectURL(event.target.files[0]);
         };
