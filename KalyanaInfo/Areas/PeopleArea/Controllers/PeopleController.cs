@@ -117,7 +117,7 @@ namespace KalyanaInfo.Areas.PeopleArea.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Email,Password,SonOrDaughterOf,Address,Hobby,Mobile,DateOfBirth,HasMobile,Gender,Education,Profession,Vehicle,Family,About,Married,RecoverEmail,Private")] Person person,IFormFile image)
+        public async Task<IActionResult> Create([Bind("Name,Mobile,Email,Password,SonOrDaughterOf,Address,Hobby,Mobile,DateOfBirth,HasMobile,Gender,Education,Profession,Vehicle,Family,About,Married,RecoverEmail,Private")] Person person,IFormFile image)
         {
             string res = "";
             if (image!=null)
